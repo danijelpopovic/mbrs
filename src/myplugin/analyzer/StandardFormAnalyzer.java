@@ -26,32 +26,17 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Property;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Type;
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Stereotype;
 
-public class StandardFormAnalyzer {	
-	//root model package
-	private Package root;
+public class StandardFormAnalyzer extends BaseAnalyzer{	
 	
-	//java root package for generated code
-	private String filePackage;
 	
 	public StandardFormAnalyzer(Package root, String filePackage) {
-		super();
-		this.root = root;
-		this.filePackage = filePackage;
+		super(root, filePackage);		
 	}
 
-	public Package getRoot() {
-		return root;
-	}
 	
-	public void prepareModel() throws AnalyzeException {
-		FMModel.getInstance().getClasses().clear();
-		FMModel.getInstance().getEnumerations().clear();
-		processPackage(root, filePackage);
-	}
 	
-	private void processPackage(Package pack, String packageOwner) throws AnalyzeException {
-		//Recursive procedure that extracts data from package elements and stores it in the 
-		// intermediate data structure
+	@Override
+	public void processPackage(Package pack, String packageOwner) throws AnalyzeException {
 		if (pack.getName() == null) throw  
 			new AnalyzeException("Packages must have names!");
 		
@@ -81,7 +66,6 @@ public class StandardFormAnalyzer {
 				if (ownedElement instanceof Package) {					
 					Package ownedPackage = (Package)ownedElement;
 					if (StereotypesHelper.getAppliedStereotypeByString(ownedPackage, "BusinessApp") != null)
-						//only packages with stereotype BusinessApp are candidates for metadata extraction and code generation:
 						processPackage(ownedPackage, packageName);
 				}
 				
@@ -171,7 +155,7 @@ public class StandardFormAnalyzer {
 			if(opossiteProperty != null ) {
 				if(p.getUpper() == 1) {
 					prop.setForeignKey(true);
-					prop.setPackagePath(getImportedPackage(attType.getPackage().getName(),attType.getPackage()));
+					prop.setPackagePath(getImportedPackage(attType.getPackage().getName(),attType.getPackage(), AnalyzerTypeEnum.STANDARDFORM));
 				
 					if(StereotypesHelper.getAppliedStereotypeByString(p, Resources.UI_PROPERTY) != null) {
 						Stereotype propStereotypeUI = StereotypesHelper.getAppliedStereotypeByString(p, Resources.UI_PROPERTY);
@@ -286,60 +270,9 @@ public class StandardFormAnalyzer {
 				}
 			}
 			
-			prop.setColumnName(getTagValue(p,propStereotype,"columnName"));
-			
-			
-//		String message ="";
-//		message+="length "+getTagValue(p,propStereotype,"length")+"\n"+"precision "+getTagValue(p,propStereotype,"precision")+"\n"+
-//				"component "+getTagValue(p,propStereotype,"component")+"\n"+"toolTip "+getTagValue(p,propStereotype,"toolTip")+"\n"+
-//				"migLayout "+getTagValue(p,propStereotype,"migLayout")+"\n"+"migLabel "+getTagValue(p,propStereotype,"migLabel")
-//				+"\n"+"shown "+getTagValue(p,propStereotype,"shown")+"\n"+"tableColumn "+getTagValue(p,propStereotype,"tableColumn")
-//				+"\n"+"tableColumn "+getTagValue(p,propStereotype,"tableColumn")+"\n"+"columnName "+getTagValue(p,propStereotype,"columnName");
-//		JOptionPane.showMessageDialog(null, message);
-//			System.out.println("length "+getTagValue(p,propStereotype,"length"));
-//			System.out.println("precision "+getTagValue(p,propStereotype,"precision"));
-//			System.out.println("component "+getTagValue(p,propStereotype,"component"));
-//			System.out.println("toolTip "+getTagValue(p,propStereotype,"toolTip"));
-//			System.out.println("migLayout "+getTagValue(p,propStereotype,"migLayout"));
-//			System.out.println("migLabel "+getTagValue(p,propStereotype,"migLabel"));
-//			System.out.println("shown "+getTagValue(p,propStereotype,"shown"));
-//			System.out.println("tableColumn "+getTagValue(p,propStereotype,"tableColumn"));
-//			System.out.println("columnName "+getTagValue(p,propStereotype,"columnName"));
-			
-			
-		
+			prop.setColumnName(getTagValue(p,propStereotype,"columnName"));	
 		}
 		return prop;		
-	}
-	
-	private String getTagValue(Element el, Stereotype s, String tagName) {
-		List value = StereotypesHelper.getStereotypePropertyValueAsString (
-	           el, s, tagName);
-		if (value == null) 
-			return null;
-	 	if (value.size() == 0)
-			return null;
-		return (String) value.get(0);
-	}
-	
-	private FMEnumeration getEnumerationData(Enumeration enumeration, String packageName) throws AnalyzeException {
-		FMEnumeration fmEnum = new FMEnumeration(enumeration.getName(), packageName);
-		List<EnumerationLiteral> list = enumeration.getOwnedLiteral();
-		for (int i = 0; i < list.size() - 1; i++) {
-			EnumerationLiteral literal = list.get(i);
-			if (literal.getName() == null)  
-				throw new AnalyzeException("Items of the enumeration " + enumeration.getName() +
-				" must have names!");
-			fmEnum.addValue(literal.getName());
-		}
-		return fmEnum;
-	}	
-	private String getImportedPackage(String name, Package p) {
-		if(p.getOwningPackage() != null) {
-			name =   p.getOwningPackage().getName() +"."+ name;
-			getImportedPackage(name, p.getOwningPackage());
-		}
-		return name;
 	}
 	
 }

@@ -104,8 +104,6 @@ class GenerateAction extends MDAction{
 			JOptionPane.showMessageDialog(null, "Code is successfully generated! Generated code is in folder: " + go.getOutputPath() +
 					                         "package: " + go.getFilePackage());
 			
-			
-			
 			exportToXml();
 		} catch (AnalyzeException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
