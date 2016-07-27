@@ -49,7 +49,6 @@ public class EJBGenerator extends BasicGenerator {
 						context.put("importedPackages", cl.getImportedPackages());					
 						getTemplate().process(context, out);
 						out.flush();
-									
 					}
 				} catch (TemplateException e) {	
 					JOptionPane.showMessageDialog(null, e.getMessage());

@@ -3,6 +3,8 @@ package myplugin.generator.fmmodel;
 import java.util.ArrayList;
 import java.util.List;
 
+import myplugin.generator.fmmodel.gui.FMStandardForm;
+
 /** FMModel: Singleton class. This is intermediate data structure that keeps metadata
  * extracted from MagicDraw model. Data structure should be optimized for code generation
  * using freemarker
@@ -11,6 +13,7 @@ import java.util.List;
 public class FMModel {
 	
 	private List<FMClass> classes = new ArrayList<FMClass>();
+	private List<FMStandardForm> classesForm = new ArrayList<FMStandardForm>();
 	private List<FMEnumeration> enumerations = new ArrayList<FMEnumeration>();
 	
 	//....
@@ -39,6 +42,14 @@ public class FMModel {
 	}
 	public void setEnumerations(List<FMEnumeration> enumerations) {
 		this.enumerations = enumerations;
+	}
+
+	public List<FMStandardForm> getClassesForm() {
+		return classesForm;
+	}
+
+	public void setClassesForm(List<FMStandardForm> classesForm) {
+		this.classesForm = classesForm;
 	}
 
 

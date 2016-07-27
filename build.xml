@@ -44,4 +44,29 @@
 			<fileset dir="resources/templates" includes="*.ftl"/>
 		</copy>
 	</target>
+	
+	<target name="allOp">
+		<delete dir="bin"/>
+		<delete file="dist/myplugin.jar"/>
+		
+		<mkdir dir="bin"/>
+		<javac debug="yes" destdir="bin" srcdir="src" classpathref="all-libs"/>
+		
+		<mkdir dir="dist"/>
+		<jar destfile="dist/myplugin.jar" basedir="bin">
+			<zipfileset dir="bin" includes="**"/>
+		</jar>
+		
+		<mkdir dir="${MAGICDRAW_HOME}/plugins/myplugin"/>
+		<copy file="dist/myplugin.jar" todir="${MAGICDRAW_HOME}/plugins/myplugin"/>
+		<copy file="resources/plugin.xml" todir="${MAGICDRAW_HOME}/plugins/myplugin"/>
+		<copy file="resources/ProjectOptions.xml" todir="${MAGICDRAW_HOME}/plugins/myplugin"/>
+		<copy todir="${MAGICDRAW_HOME}/plugins/myplugin">
+			<fileset dir="lib" includes="*.jar"/>
+		</copy>
+		<copy todir="${MAGICDRAW_HOME}/plugins/myplugin/templates">
+			<fileset dir="resources/templates" includes="*.ftl"/>
+		</copy>
+	</target>
+	
 </project>
