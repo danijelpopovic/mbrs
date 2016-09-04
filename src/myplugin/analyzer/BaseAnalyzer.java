@@ -190,7 +190,6 @@ public abstract class BaseAnalyzer {
 					}
 				}
 				
-				//System.out.println("Naziv prop " + attName + ", a njegov opossite je " + oppositeProperty.getName());
 			}
 		}
 	
